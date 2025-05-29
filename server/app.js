@@ -26,7 +26,7 @@ export default async function startApp() {
   // Main routes
 
   app.get("/", (req, res) => {
-    res.send("Server is Running!");
+    res.send("Server is running");
   });
 
   app.use("/books", bookRoutes);

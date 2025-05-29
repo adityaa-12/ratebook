@@ -29,6 +29,6 @@ export async function AddBook(book) {
 }
 
 export async function getBooksCount() {
-    const [rows] = await db.execute("SELECT COUNT(*) AS COUNT FROM BOOKS");
+    const [rows] = await db.execute("SELECT COUNT(*) AS count FROM BOOKS");
     return rows[0].count;
 }

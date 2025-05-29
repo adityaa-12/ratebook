@@ -87,3 +87,21 @@ export async function AddNewBook(req, res, next) {
     next(error);
   }
 }
+
+
+export async function getTotalCount(req, res, next) {
+  try {
+    const data = await getBooksCount();  
+    if (!data) {
+      return res.json({
+        message: "Failed to get Data!",
+      });
+    }
+    return res.json({
+      totalCount: data,
+      message: "Data Found!",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
