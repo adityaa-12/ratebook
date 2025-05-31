@@ -28,20 +28,22 @@ export async function ForgotPassword(req, res, next) {
 
 export async function isLogin(req, res, next) {
   try {
-    let { email, password } = req.body;
+    let { email, password } = req.body || {};
 
-    if (!email && !password) {
+    if (!email || !password) {
+      
       return res.json({
         message: "Email and passwords are required!",
       });
     }
 
     const isExist = await isLoginMail(email);
+    
     const user = isExist[0];
 
     if (isExist.length === 0 || !isExist) {
       return res.json({
-        message: "Invalid Credientials!",
+        message: "User Does not exist!",
       });
     }
 
@@ -54,7 +56,7 @@ export async function isLogin(req, res, next) {
     }
 
     const token = jwt.sign(
-      { id: user.ID, email: user.EMAIL },
+      { id: user.ID, email: user.EMAIL, role: user.ROLE },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -65,6 +67,8 @@ export async function isLogin(req, res, next) {
       sameSite: "Strict",
       maxAge: 3600000,
     });
+    console.log(user.ROLE);
+    
 
     return res.status(200).json({
       message: "Login Successful",
@@ -135,7 +139,7 @@ export async function AddUser(req, res, next) {
     const insertId = storeUser.insertId;
 
     const token = jwt.sign(
-      { id: insertId, email: email },
+      { id: insertId, email: email, role: storeUser.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
