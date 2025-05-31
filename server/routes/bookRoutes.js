@@ -10,8 +10,9 @@ router.get("/", fetchAllBooks);
 
 router.get("/totalbooks", getTotalCount);
 
-router.get("/:id", FetchSingleBook);
-
 router.post("/add", authUser, authAdmin,  AddNewBook);
 
+router.get("/:id", FetchSingleBook);
+
 export default router;
+
