@@ -7,7 +7,7 @@ import {
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-export async function ForgotPassword(req, res, next) {
+export async function ForgotPassword(req, res) {
   try {
     let { email } = req.body;
     let isExist = await isExistUser(email);
@@ -22,23 +22,25 @@ export async function ForgotPassword(req, res, next) {
       isExistMail: 1,
     });
   } catch (error) {
-    next(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }
 
-export async function isLogin(req, res, next) {
+export async function isLogin(req, res) {
   try {
     let { email, password } = req.body || {};
 
     if (!email || !password) {
-      
       return res.json({
         message: "Email and passwords are required!",
       });
     }
 
     const isExist = await isLoginMail(email);
-    
+
     const user = isExist[0];
 
     if (isExist.length === 0 || !isExist) {
@@ -60,7 +62,7 @@ export async function isLogin(req, res, next) {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-    
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
@@ -68,7 +70,6 @@ export async function isLogin(req, res, next) {
       maxAge: 3600000,
     });
     console.log(user.ROLE);
-    
 
     return res.status(200).json({
       message: "Login Successful",
@@ -79,11 +80,14 @@ export async function isLogin(req, res, next) {
       },
     });
   } catch (error) {
-    next(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }
 
-export async function ChangePassword(req, res, next) {
+export async function ChangePassword(req, res) {
   try {
     let { email, password } = req.body;
     let hashPassword = await bcryptjs.hash(password, 10);
@@ -106,11 +110,14 @@ export async function ChangePassword(req, res, next) {
       message: "Password has been changed",
     });
   } catch (error) {
-    next();
+    return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }
 
-export async function AddUser(req, res, next) {
+export async function AddUser(req, res) {
   try {
     let { username, email, password } = req.body;
     let hashPassword = await bcryptjs.hash(password, 10);
@@ -161,6 +168,9 @@ export async function AddUser(req, res, next) {
       },
     });
   } catch (error) {
-    next(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }

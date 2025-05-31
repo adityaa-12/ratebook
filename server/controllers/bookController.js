@@ -5,7 +5,7 @@ import {
   getBooksCount,
 } from "../models/bookModel.js";
 
-export async function fetchAllBooks(req, res, next) {
+export async function fetchAllBooks(req, res) {
   try {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
@@ -21,11 +21,14 @@ export async function fetchAllBooks(req, res, next) {
       data: books,
     });
   } catch (error) {
-    next(error);
+     return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }
 
-export async function FetchSingleBook(req, res, next) {
+export async function FetchSingleBook(req, res) {
   try {
     const id = parseInt(req.params.id);
     const data = await getBookById(id);
@@ -41,11 +44,14 @@ export async function FetchSingleBook(req, res, next) {
       bookData: data,
     });
   } catch (error) {
-    next(error);
+     return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }
 
-export async function AddNewBook(req, res, next) {
+export async function AddNewBook(req, res) {
   try {
     const { title, author, description, published_date, cover_url, genre } =
       req.body;
@@ -84,12 +90,15 @@ export async function AddNewBook(req, res, next) {
       message: "New book has been added!",
     });
   } catch (error) {
-    next(error);
+     return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }
 
 
-export async function getTotalCount(req, res, next) {
+export async function getTotalCount(req, res) {
   try {
     const data = await getBooksCount();  
     if (!data) {
@@ -102,6 +111,9 @@ export async function getTotalCount(req, res, next) {
       message: "Data Found!",
     });
   } catch (error) {
-    next(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }

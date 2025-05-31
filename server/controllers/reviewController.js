@@ -5,7 +5,7 @@ import {
   getReviewsByBookId,
 } from "../models/reviewModel.js";
 
-export async function getRevForUser(req, res, next) {
+export async function getRevForUser(req, res) {
   try {
     const userId = parseInt(req.params.id);
     const userReviews = await getReviewByUserId(userId);
@@ -20,11 +20,14 @@ export async function getRevForUser(req, res, next) {
       userRevData: userReviews,
     });
   } catch (error) {
-    next(error);
+     return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }
 
-export async function getRevForBook(req, res, next) {
+export async function getRevForBook(req, res) {
   try {
     const bookId = parseInt(req.params.id);
     const bookReviews = await getReviewsByBookId(bookId);
@@ -41,11 +44,14 @@ export async function getRevForBook(req, res, next) {
       rating: averageRating ? parseFloat(averageRating) : null,
     });
   } catch (error) {
-    next(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }
 
-export async function addNewRev(req, res, next) {
+export async function addNewRev(req, res) {
   try {
     const { userId, bookId, rating, comment } = req.body;
 
@@ -73,6 +79,9 @@ export async function addNewRev(req, res, next) {
       message: "New Review has been added!",
     });
   } catch (error) {
-    next(error);
+     return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
   }
 }
