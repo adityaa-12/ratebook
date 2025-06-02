@@ -1,13 +1,18 @@
 import React from 'react'
 import AppRouter from './router/AppRouter';
-import Header from './pages/Header';
+import { BrowserRouter } from 'react-router-dom';
+import RouteChangeLoader from './components/RouteChangeLoader';
+import AppLayout from './pages/AppLayout';
 
 const App: React.FC = () => {
   return (
-    <div>
-      <Header />
-      <AppRouter />
-    </div>
+    <>
+      <BrowserRouter>
+        <AppLayout />
+        <RouteChangeLoader />
+        <AppRouter />
+      </BrowserRouter>
+    </>
   )
 }
 
