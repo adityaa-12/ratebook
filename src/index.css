@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
 body {
-  background: #f3f4f6;
-  font-family: "Newsreader", serif;
+  background: #fcfcfc;
+  font-family: "Jost", sans-serif;
 }

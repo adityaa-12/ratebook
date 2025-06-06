@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 
 const AppLayout: React.FC = () => {
     return (
-        <div className='w-[85vw] mx-auto max-sm:w-[100vw]'>
+        <div className='w-[85vw] mx-auto max-sm:w-[95vw]'>
             <Header />
             <Outlet />
         </div>
