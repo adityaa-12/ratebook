@@ -1,12 +1,53 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState<string>("");
+  let baseURL = import.meta.env.VITE_API_URL;
 
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(() => e.target.value);
+  }
+
+  const handleSearch = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      searchQuery();
+    }
+  }
+
+  const searchQuery = async () => {
+
+    if (!searchInput.trim()) return;
+
+    try {
+      let SearchURL = `${baseURL}books?search=${searchInput}`;
+
+      let req = await fetch(`${SearchURL}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let res = await req.json();
+      let data = res.data;
+
+      if (req.ok) {
+        navigate(`/results?search=${searchInput}`, { state: { data } });
+        return;
+      }
+
+      if (!req.ok) {
+        navigate(`/results?search=${searchInput}`, { state: { data } });
+        return;
+      }
+
+    } catch (error) {
+      console.log("Internal Server Error");
+    }
+
   }
 
   const [showNav, setShowNav] = useState<boolean>(false);
@@ -23,19 +64,19 @@ const Header: React.FC = () => {
           </div>
           <div id="user-options" className='flex flex-row items-center gap-1.5 max-sm:w-full'>
             <div id="search-bar" className='flex flex-row items-center bg-stone-200 px-2.5 py-2.5 gap-1.5 rounded-md max-sm:w-full'>
-              <button className='flex cursor-pointer text-stone-500'>
+              <button className='flex cursor-pointer text-stone-500' onClick={searchQuery}>
                 <span className="flex material-symbols-outlined">
                   search
                 </span>
               </button>
-              <input type="text" placeholder='Search for books...' value={searchInput} name='search' id='search' className='outline-none text-md max-sm:w-full' autoComplete='off' onChange={inputHandler} />
+              <input type="text" placeholder='Search for books...' value={searchInput} name='search' id='search' className='outline-none text-md max-sm:w-full' autoComplete='off' onKeyDown={handleSearch} onChange={inputHandler} />
             </div>
             <div id="user-btns" className='flex flex-row items-center max-md:hidden'>
-              <button id="user-profile-desk" className='flex bg-stone-200 px-2.5 py-2.5 cursor-pointer rounded-md'>
+              <Link to="/user-dashboard" id="user-profile-desk" className='flex bg-stone-200 px-2.5 py-2.5 cursor-pointer rounded-md'>
                 <span className="flex material-symbols-outlined">
                   account_circle
                 </span>
-              </button>
+              </Link>
             </div>
             <div id="dropdown-mob">
               {
@@ -62,7 +103,7 @@ const Header: React.FC = () => {
       </div>
       {
         showNav && (
-          <div id="dropdown-links" className='bg-stone-100 p-2 w-full md:hidden'>
+          <div id="dropdown-links" className='bg-stone-100 p-2 w-full md:hidden z-50'>
             <div id="d-options" className='flex flex-col justify-start gap-1'>
               <Link id="option" to='/profile' className='flex flex-row text-md items-center justify-between px-2 py-1 cursor-pointer hover:text-stone-950 hover:bg-stone-200 rounded-md text-stone-700'>
                 <p>Your Profile</p>
