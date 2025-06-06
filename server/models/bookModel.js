@@ -32,3 +32,8 @@ export async function getBooksCount() {
     const [rows] = await db.execute("SELECT COUNT(*) AS count FROM BOOKS");
     return rows[0].count;
 }
+
+export async function getBookWithName(search) {
+  const [result] = await db.execute("SELECT * FROM BOOKS WHERE BOOKNAME LIKE ?", [`${search}`]);
+  return result;
+}

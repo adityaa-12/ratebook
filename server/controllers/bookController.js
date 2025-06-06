@@ -3,6 +3,7 @@ import {
   getAllBooks,
   getBookById,
   getBooksCount,
+  getBookWithName,
 } from "../models/bookModel.js";
 
 export async function fetchAllBooks(req, res) {
@@ -101,6 +102,7 @@ export async function AddNewBook(req, res) {
 export async function getTotalCount(req, res) {
   try {
     const data = await getBooksCount();  
+    
     if (!data) {
       return res.json({
         message: "Failed to get Data!",
@@ -110,6 +112,32 @@ export async function getTotalCount(req, res) {
       totalCount: data,
       message: "Data Found!",
     });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      err: error.message,
+    });
+  }
+}
+
+export async function getBookByName(req, res) {
+  try {
+    const searchQuery = req.query.search;
+    const isFound = await getBookWithName(searchQuery);
+
+    if (isFound.length === 0) {
+      return res.status(404).json({
+        message: "Search results not found!",
+        data: isFound,
+      })
+    }
+
+    return res.status(201).json({
+      message: "Search results found!",
+      data: isFound,
+    });
+ 
+    
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
