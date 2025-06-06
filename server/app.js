@@ -8,7 +8,6 @@ import bookRoutes from "./routes/bookRoutes.js"
 import reviewRoutes from "./routes/reviewRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
-import { authUser } from "./middleware/auth.js";
 
 export default async function startApp() {
   const app = express();
