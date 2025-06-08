@@ -1,12 +1,11 @@
 import React from 'react'
 
-const ShowResponse: React.FC = () => {
-
+const Loading: React.FC = () => {
     return (
         <div>
-    
+
         </div>
     )
 }
 
-export default ShowResponse;
+export default Loading
