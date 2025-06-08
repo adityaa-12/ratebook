@@ -35,18 +35,29 @@ const Header: React.FC = () => {
       let data = res.data;
 
       if (req.ok) {
-        navigate(`/results?search=${searchInput}`, { state: { data } });
+        navigate(`/results?search=${searchInput}`, { state: data });
         return;
       }
 
       if (!req.ok) {
-        navigate(`/results?search=${searchInput}`, { state: { data } });
+        navigate(`/results?search=${searchInput}`, { state: data });
         return;
       }
 
     } catch (error) {
       console.log("Internal Server Error");
     }
+
+  }
+
+  const checkUser = () => {
+    let isCookie = document.cookie;
+    if (isCookie == "") {
+      console.log("Not Found!");
+      return;
+    }
+
+    console.log("Found");
 
   }
 
@@ -59,8 +70,8 @@ const Header: React.FC = () => {
         </div>
         <div id="user-options-wrapper" className='flex flex-row items-center gap-6 max-sm:w-full'>
           <div id="links" className='flex flex-row gap-4.5 font-medium text-stone-700 max-md:hidden'>
-            <a href="/about" className='hover:text-stone-950 hover:underline'>About Us</a>
-            <a href="/books" className='hover:text-stone-950 hover:underline'>Browse Books</a>
+            <Link to="/about" className='hover:text-stone-950 hover:underline'>About Us</Link>
+            <Link to="/books" className='hover:text-stone-950 hover:underline'>Browse Books</Link>
           </div>
           <div id="user-options" className='flex flex-row items-center gap-1.5 max-sm:w-full'>
             <div id="search-bar" className='flex flex-row items-center bg-stone-200 px-2.5 py-2.5 gap-1.5 rounded-md max-sm:w-full'>
@@ -72,11 +83,11 @@ const Header: React.FC = () => {
               <input type="text" placeholder='Search for books...' value={searchInput} name='search' id='search' className='outline-none text-md max-sm:w-full' autoComplete='off' onKeyDown={handleSearch} onChange={inputHandler} />
             </div>
             <div id="user-btns" className='flex flex-row items-center max-md:hidden'>
-              <Link to="/user-dashboard" id="user-profile-desk" className='flex bg-stone-200 px-2.5 py-2.5 cursor-pointer rounded-md'>
+              <button onClick={checkUser} id="user-profile-desk" className='flex bg-stone-200 px-2.5 py-2.5 cursor-pointer rounded-md'>
                 <span className="flex material-symbols-outlined">
                   account_circle
                 </span>
-              </Link>
+              </button>
             </div>
             <div id="dropdown-mob">
               {
