@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import Loading from '../components/Loading';
 
 const SearchResults: React.FC = () => {
 
   const [isData, setIsData] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   interface typeSearch {
     ID: number;
@@ -14,6 +16,7 @@ const SearchResults: React.FC = () => {
     GENRE: string;
     PUBLISHED_YEAR: number;
     RATING_COUNT: number;
+    DESCRIPTION: string;
   }
   const [searchData, setSearchData] = useState<typeSearch[]>([{
     ID: 0,
@@ -24,6 +27,7 @@ const SearchResults: React.FC = () => {
     GENRE: "",
     PUBLISHED_YEAR: 0,
     RATING_COUNT: 0,
+    DESCRIPTION: "",
   }]);
 
   const location = useLocation();
@@ -33,12 +37,15 @@ const SearchResults: React.FC = () => {
 
     if (searchData == "") {
       setIsData(false);
+      setIsLoading(false);
       return;
     }
 
     setIsData(true);
     setSearchData(searchData);
+    setIsLoading(false);
   }, [location.state]);
+
 
 
   return (
@@ -46,8 +53,69 @@ const SearchResults: React.FC = () => {
       <div id="wrapper" className='w-[85vw] mx-auto max-sm:w-[95vw]'>
         {
           isData && (
-            <div id="search-results" className='bg-stone-100 p-2'>
+            <div id="search-results" className='p-2'>
+              <div id="head">
+                <h2 className='font-medium mb-1.5 text-lg'>Search Results</h2>
+              </div>
+              <div id="card-container" className="flex flex-wrap gap-4">
+                {
+                  searchData.map((sData) => (
+                    <div
+                      id="card"
+                      key={sData.ID}
+                      className="flex flex-col sm:flex-row gap-2 py-2.5 px-2.5 rounded-xl border border-gray-200 w-full"
+                    >
+                      {/* Image Section */}
+                      <div id="img" className="flex-shrink-0 w-full sm:w-[180px] md:w-[200px]">
+                        <img
+                          src={sData.COVER_URL}
+                          alt={sData.BOOKNAME}
+                          className="w-full h-full max-h-[280px] object-cover rounded-md shadow-md"
+                        />
+                      </div>
 
+                      {/* Book Details */}
+                      <div id="details" className="flex flex-col gap-2 px-1 sm:px-4 py-2">
+                        <p className="font-bold text-2xl text-gray-900">{sData.BOOKNAME}</p>
+
+                        <span className="flex items-center gap-1 text-gray-600">
+                          <p>By</p>
+                          <p className="font-medium">{sData.AUTHOR}</p>
+                        </span>
+
+                        <p className="text-gray-500">
+                          Genre/<span className="font-medium text-gray-600">{sData.GENRE}</span>
+                        </p>
+
+                        <div id="rating" className="flex items-center gap-1 text-amber-600">
+                          <span className="material-symbols-outlined">star_half</span>
+                          <p>{sData.AVERAGE_RATING}</p>
+                          <span className="text-gray-900">({sData.RATING_COUNT})</span>
+                        </div>
+
+                        <div id="year" className="text-gray-500 text-sm">
+                          <p>{sData.PUBLISHED_YEAR}</p>
+                        </div>
+
+                        <p className="text-gray-700 line-clamp-3 text-sm">
+                          {sData.DESCRIPTION}
+                          </p>
+
+                        <div id="btns" className="flex flex-col sm:flex-row gap-2 mt-2">
+                          <button className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 flex items-center justify-center gap-1.5 text-sm cursor-pointer">
+                            <span className="material-symbols-outlined">open_in_new</span>
+                            Read Reviews
+                          </button>
+                          <button className="bg-gray-500 text-white px-3 py-2 rounded-md hover:bg-gray-600 flex items-center justify-center gap-1.5 text-sm cursor-pointer">
+                            <span className="material-symbols-outlined">bookmark</span>
+                            Save to Favorites
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
             </div>
           )
         }
@@ -62,9 +130,10 @@ const SearchResults: React.FC = () => {
             </div>
           )
         }
-        <div id="see-other-books" className="mt-8 p-4">
+        <hr className='border border-stone-200 w-4xl mx-auto my-4' />
+        <div id="see-other-books" className="p-4">
           <div id="head" className="font-semibold text-xl mb-4">
-            <p>Browse Books</p>
+            <p>Browse other books</p>
           </div>
 
           <div id="card-container" className="flex flex-wrap gap-4">
@@ -123,6 +192,14 @@ const SearchResults: React.FC = () => {
             </div>
 
           </div>
+        </div>
+
+        <div id="loader">
+          {
+            isLoading && (
+              <Loading />
+            )
+          }
         </div>
 
       </div>
