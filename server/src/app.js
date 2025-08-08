@@ -3,6 +3,7 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
+import bookRoutes from "./routes/bookRoutes.js";
 
 const app = express();
 
@@ -16,7 +17,11 @@ app.use(morgan('combined'));
 
 app.get("/", (req, res) => {
     res.send("This is Home Route");
-})
+});
+
+// Book Routes
+
+app.use("/book", bookRoutes);
 
 // Error Handler
 
