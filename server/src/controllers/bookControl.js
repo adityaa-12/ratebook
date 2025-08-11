@@ -93,9 +93,42 @@ export const updateBook = async (req, res) => {
         message: "Not Found",
       });
     }
-    
+
     return res.status(200).json({
       message: "Book Updated Successfully!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+// Delete Book By ID
+
+export const deleteBook = async (req, res) => {
+  try {
+    const bookId = req.params.id;
+    const isExist = await books.findOne({ id: bookId });
+
+    console.log(bookId);
+
+    if (!isExist) {
+      return res.status(404).json({
+        message: "Book Not Found!",
+      });
+    }
+
+    const delBook = await books.findOneAndDelete(bookId);
+
+    if (!delBook) {
+      return res.status(400).json({
+        message: "Something went wrong, while deleting the book",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Book Deleted Successfully!",
     });
   } catch (error) {
     return res.status(400).json({
