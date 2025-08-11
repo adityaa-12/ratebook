@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import bookRoutes from "./routes/bookRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.get("/", (req, res) => {
 // Book Routes
 
 app.use("/book", bookRoutes);
+
+app.use("/user", userRoutes);
 
 // Error Handler
 
