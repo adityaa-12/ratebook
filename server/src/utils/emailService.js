@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-export const sendMail = async (to, subject, text) => {
+export const sendMail = async (to, subject, html) => {
   try {
     const transport = nodemailer.createTransport({
       service: "gmail",
@@ -14,10 +14,12 @@ export const sendMail = async (to, subject, text) => {
       from: `"RateBook Support"`,
       to,
       subject,
-      text,
+      html,
     });
+
+    return true;
   } catch (error) {
     console.log(error.message);
-    return;
+    return false;
   }
 };
