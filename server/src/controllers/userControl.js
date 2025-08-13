@@ -2,6 +2,9 @@ import users from "../models/userModel.js";
 import { sendMail } from "../utils/emailService.js";
 import { generateOTP } from "../utils/otpGenerate.js";
 import { storeOTP, verifyOTP } from "../utils/otpStore.js";
+import jwt from "jsonwebtoken";
+
+// Create Account
 
 export const createAccount = async (req, res) => {
   try {
@@ -42,6 +45,8 @@ export const createAccount = async (req, res) => {
     });
   }
 };
+
+// Generate OTP
 
 export const genOTP = async (req, res) => {
   try {
@@ -91,6 +96,8 @@ export const genOTP = async (req, res) => {
   }
 };
 
+// Confirm OTP
+
 export const verOTP = async (req, res) => {
   try {
     let userBody = req.body;
@@ -112,6 +119,58 @@ export const verOTP = async (req, res) => {
 
     return res.status(200).json({
       message: "OTP has been Verified",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    let userBody = req.body;
+
+    if (!userBody) {
+      return res.status(200).json({
+        message: "Data Required!",
+      });
+    }
+
+    let userMail = userBody.email;
+    let userPass = userBody.password;
+
+    let findUser = await users.findOne({ email: userMail });
+    console.log(findUser);
+
+    if (findUser == 0) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+    console.log(userBody);
+
+    if (findUser.password === userPass) {
+      const token = jwt.sign(
+        { id: findUser.id, email: userBody.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 1000,
+      });
+
+      return res.status(200).json({
+        message: "You're Login Successfully",
+      });
+    }
+
+    return res.status(400).json({
+      message: "Invalid Email and Password!",
     });
   } catch (error) {
     return res.status(400).json({
