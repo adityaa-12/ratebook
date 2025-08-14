@@ -98,7 +98,7 @@ export const genOTP = async (req, res) => {
 
 // Confirm OTP
 
-export const verOTP = async (req, res) => {
+export const authOTP = async (req, res) => {
   try {
     let userBody = req.body;
 
@@ -126,6 +126,8 @@ export const verOTP = async (req, res) => {
     });
   }
 };
+
+// Login User
 
 export const loginUser = async (req, res) => {
   try {
@@ -171,6 +173,74 @@ export const loginUser = async (req, res) => {
 
     return res.status(400).json({
       message: "Invalid Email and Password!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+// Change Password
+
+export const changePass = async (req, res) => {
+  try {
+    let userBody = req.body;
+
+    let email = userBody.email;
+    let password = userBody.password;
+
+    if (!userBody) {
+      return res.status(400).json({
+        message: "Data Required!",
+      });
+    }
+
+    let Change = await users.findOneAndUpdate(
+      { email },
+      { $set: { password: password } }
+    );
+
+    if (Change) {
+      return res.status(200).json({
+        message: "Updated Successfully",
+      });
+    }
+
+    return res.status(400).json({
+      message: "Failed to Change Password!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+// Update User Details
+
+export const updateUser = async (req, res) => {
+  try {
+    let userBody = req.body;
+
+    const { email, ...updatedData } = userBody;
+
+    if (!userBody) {
+      return res.status(400).json({
+        message: "Data Required!",
+      });
+    }
+
+    let Change = await users.findOneAndUpdate({ email }, { $set: updatedData });
+
+    if (Change) {
+      return res.status(200).json({
+        message: "Updated Successfully",
+      });
+    }
+
+    return res.status(400).json({
+      message: "Failed to Update!",
     });
   } catch (error) {
     return res.status(400).json({
