@@ -5,6 +5,7 @@ import cors from "cors";
 import morgan from "morgan";
 import bookRoutes from "./routes/bookRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
@@ -37,11 +38,13 @@ app.get("/", (req, res) => {
   res.send("This is Home Route");
 });
 
-// Book Routes
+// App Routes
 
 app.use("/book", bookRoutes);
 
 app.use("/user", userRoutes);
+
+app.use("/review", reviewRoutes);
 
 // Error Handler
 

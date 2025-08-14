@@ -37,4 +37,4 @@ const createReview = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("review", createReview);
+export default mongoose.model("Reviews", createReview);
