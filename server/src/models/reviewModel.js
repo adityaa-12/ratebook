@@ -20,12 +20,21 @@ const createReview = new mongoose.Schema(
     },
     authorid: {
       type: String,
+      ref: "users",
       required: true,
       unique: true,
       trim: true,
     },
     userid: {
       type: String,
+      ref: "users",
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    bookid: {
+      type: String,
+      ref: "books",
       required: true,
       unique: true,
       trim: true,
