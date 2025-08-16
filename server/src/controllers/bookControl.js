@@ -80,11 +80,11 @@ export const searchBook = async (req, res) => {
 export const updateBook = async (req, res) => {
   try {
     const bookId = req.params.id;
-    const updatedBook = req.body;
+    const bookBody = req.body;
 
     const updateBook = await books.findOneAndUpdate(
       { id: bookId },
-      updatedBook,
+      bookBody,
       { new: true }
     );
 
@@ -110,8 +110,6 @@ export const deleteBook = async (req, res) => {
   try {
     const bookId = req.params.id;
     const isExist = await books.findOne({ id: bookId });
-
-    console.log(bookId);
 
     if (!isExist) {
       return res.status(404).json({
