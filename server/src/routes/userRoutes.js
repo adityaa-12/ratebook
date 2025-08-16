@@ -4,6 +4,7 @@ import {
   changePass,
   createAccount,
   genOTP,
+  getAllData,
   loginUser,
   updateUser,
 } from "../controllers/userControl.js";
@@ -21,5 +22,7 @@ router.get("/login", loginUser);
 router.post("/change", changePass);
 
 router.post("/update", updateUser);
+
+router.get("/get/:id", getAllData);
 
 export default router;

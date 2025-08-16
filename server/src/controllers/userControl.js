@@ -1,3 +1,5 @@
+import books from "../models/bookModel.js";
+import reviews from "../models/reviewModel.js";
 import users from "../models/userModel.js";
 import { sendMail } from "../utils/emailService.js";
 import { generateOTP } from "../utils/otpGenerate.js";
@@ -78,7 +80,6 @@ export const genOTP = async (req, res) => {
       </html>`;
 
     let msg = await sendMail(userBody.email, subject, htmltemp);
-    console.log(`OTP sent to ${userBody.email}`);
 
     if (!msg) {
       return res.status(400).json({
@@ -143,7 +144,6 @@ export const loginUser = async (req, res) => {
     let userPass = userBody.password;
 
     let findUser = await users.findOne({ email: userMail });
-    console.log(findUser);
 
     if (findUser == 0) {
       return res.status(404).json({
@@ -241,6 +241,41 @@ export const updateUser = async (req, res) => {
 
     return res.status(400).json({
       message: "Failed to Update!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+// Get all Data For Users
+
+export const getAllData = async (req, res) => {
+  try {
+    let userId = req.params.id;
+
+    if (!userId) {
+      return res.status(400).json({
+        message: "Data Required!",
+      });
+    }
+
+    const userProf = await users.findOne({ userId });
+
+    if (userProf == 0) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+
+    const userBooks = await books.find({ authorid: userId });
+    const userReviews = await reviews.find({ userid: userId });
+
+    return res.status(200).json({
+      profile: userProf,
+      books: userBooks,
+      reviews: userReviews,
     });
   } catch (error) {
     return res.status(400).json({
